@@ -1,0 +1,21 @@
+{
+  "name": "sharpie-deploy_keys",
+  "version": "0.0.1",
+  "author": "Charlie Sharpsteen <source@sharpsteen.net>",
+  "summary": "Install and manage ssh keys and host aliases",
+  "license": "Apache-2.0",
+  "source": "https://github.com/Sharpie/puppet-deploy_keys",
+  "project_page": "https://github.com/Sharpie/puppet-deploy_keys",
+  "issues_url": "https://github.com/Sharpie/puppet-deploy_keys/issues",
+  "description": "A module to help manage SSH keys and associated aliases in SSH config. Aliases allow other programs to access gated services without having to muck about with SSH keys.",
+  "tags": ["deployment", "ssh", "keys"],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 3.4.0"
+    }
+  ],
+  "dependencies": [
+    { "name": "puppetlabs/concat", "version_requirement": "1.x" }
+  ]
+}
