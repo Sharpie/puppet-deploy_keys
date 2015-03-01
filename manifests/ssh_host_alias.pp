@@ -1,7 +1,6 @@
 # == Define: ssh_host_alias
 #
-# Manages host alias definitions in the SSH client config file for the root
-# user.
+# Manages host alias definitions in SSH client config files.
 #
 # === Parameters
 #
@@ -14,15 +13,15 @@
 #   The real hostname that communication should be directed to for SSH commands
 #   using the aliased address.
 #
-# [*identityfile*]
+# [*identity_file*]
 #   The path to a SSH private key that authenticates all SSH communication
 #   using the aliased address. May be empty.
 #   Default: ''
 #
-# [*check_host_key*]
-#   A boolean value that controls whether or not the hostname should be checked
-#   against the +known_hosts+ file.
-#   Default: true
+# [*config_file*]
+#   A string that gives the location of the ssh config file where the alias
+#   should be placed.
+#   Default: /root/.ssh/config
 #
 # === Authors
 #
@@ -30,13 +29,26 @@
 #
 define deploy_keys::ssh_host_alias (
   $hostname,
-  $identityfile = '',
-  $check_host_key = true
+  $identity_file = '',
+  $config_file = '/root/.ssh/config',
 ){
-  # TODO: Extend this to handle more than just aliases for the root user.
 
-  concat::fragment{"hostalias-${title}":
-    target  => '/root/.ssh/config',
-    content => template('deploy_keys/ssh_host_alias.erb'),
+  Ssh_config {
+    ensure => present,
+    target => $config_file,
+    host   => $title,
   }
+
+  ssh_config {"Host Alias ${title}: HostName":
+    key   => 'HostName',
+    value => $hostname,
+  }
+
+  unless empty($identity_file) {
+    ssh_config {"Host Alias ${title}: IdentityFile":
+      key   => 'IdentityFile',
+      value => $identity_file,
+    }
+  }
+
 }

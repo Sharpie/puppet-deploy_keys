@@ -1,9 +1,0 @@
-Host <%= @title %>
-  HostName <%= @hostname %>
-<% unless @identityfile.empty? -%>
-  IdentityFile <%= @identityfile %>
-<% end -%>
-<% unless @check_host_key -%>
-  StrictHostKeyChecking no
-  UserKnownHostsFile /dev/null
-<% end -%>

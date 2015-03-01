@@ -16,6 +16,7 @@
     }
   ],
   "dependencies": [
-    { "name": "puppetlabs/concat", "version_requirement": "1.x" }
+    { "name": "puppetlabs/stdlib", "version_requirement": "4.x" },
+    { "name": "herculesteam/augeasproviders_ssh", "version_requirement": "2.x" }
   ]
 }
