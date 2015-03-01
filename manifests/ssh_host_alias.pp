@@ -13,15 +13,17 @@
 #   The real hostname that communication should be directed to for SSH commands
 #   using the aliased address.
 #
+# [*config_file*]
+#   A string that gives the location of the ssh config file where the alias
+#   should be placed.
+#
 # [*identity_file*]
 #   The path to a SSH private key that authenticates all SSH communication
 #   using the aliased address. May be empty.
 #   Default: ''
 #
-# [*config_file*]
-#   A string that gives the location of the ssh config file where the alias
-#   should be placed.
-#   Default: /root/.ssh/config
+# [*ensure*]
+#   Default: present
 #
 # === Authors
 #
@@ -29,12 +31,13 @@
 #
 define deploy_keys::ssh_host_alias (
   $hostname,
+  $config_file,
   $identity_file = '',
-  $config_file = '/root/.ssh/config',
+  $ensure = present,
 ){
 
   Ssh_config {
-    ensure => present,
+    ensure => $ensure,
     target => $config_file,
     host   => $title,
   }
@@ -46,8 +49,9 @@ define deploy_keys::ssh_host_alias (
 
   unless empty($identity_file) {
     ssh_config {"Host Alias ${title}: IdentityFile":
-      key   => 'IdentityFile',
-      value => $identity_file,
+      key     => 'IdentityFile',
+      value   => $identity_file,
+      require => File["${identity_file}"],
     }
   }
 
