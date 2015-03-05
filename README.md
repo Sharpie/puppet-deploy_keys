@@ -1,24 +1,37 @@
 sharpie-deploy_keys
 ===================
 
-A module to help manage SSH keys and associated aliases in SSH config.
-Aliases allow other programs to access gated services without having to muck about with SSH keys.
+A module to help manage SSH keys and associated aliases in SSH config. Aliases allow SSH-aware programs to access gated services with simple URLs without having to also manage configuration for SSH keys.
 
-### Caveats
+Examples
+--------
 
-This package has no stable releases yet.
-Specifically, _there are no tests and all interfaces are subject to change_.
-**Use in production at your own risk.**
+Defining a deploy key for r10k to use when syncing a control repo:
 
-This package also makes a few assumptions:
+```puppet
+deploy_keys::deploy_key {'r10k-control-repo':
+  ssh_dir     => '/root/.ssh',
+  owner       => 'root',
+  group       => 'root',
+  private_key => '...'
+  hostname    => 'github.com',
+  host_key    => {
+    type     => 'ssh-rsa',
+    host_key => '...',
+  }
+}
+```
 
-  - All deploy keys will be owned by root and placed in `/root/.ssh/`.
+Define a SSH alias to use an existing private key:
 
-  - The SSH client configuration for root, `/root/.ssh/config` will be used to manage host aliases.
-    This file is currently configured using the concat module which means any changes made outside of `concat::fragment` resources will be wiped out.
+```puppet
+deploy_keys::ssh_alias {'github':
+  hostname      => 'github.com',
+  config_file   => '/home/someuser/.ssh/config',
+  identity_file => '/home/someuser/.ssh/some_private_key',
+}
+```
 
-These restrictions may be lifted in future versions.
-Additionally, the use of concat to manage the SSH config file is a design decision that may change in a future version.
 
 Support
 -------
