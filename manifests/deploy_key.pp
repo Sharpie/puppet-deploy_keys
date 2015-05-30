@@ -66,6 +66,7 @@ define deploy_keys::deploy_key (
     # absent` without destroying something other configuration could depend on.
     sshkey {"${title}-host_key":
       ensure       => $ensure,
+      provider     => parsed,
       target       => "${ssh_dir}/known_hosts",
       type         => $host_key['type'],
       key          => $host_key['key'],
