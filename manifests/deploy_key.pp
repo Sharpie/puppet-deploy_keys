@@ -56,7 +56,6 @@ define deploy_keys::deploy_key (
     group   => $group,
     mode    => '0600',
     content => $private_key,
-    require => File[$ssh_dir],
   }
 
   unless empty($host_key) {
@@ -71,7 +70,11 @@ define deploy_keys::deploy_key (
       type         => $host_key['type'],
       key          => $host_key['key'],
       host_aliases => [$hostname],
-      require => File[$ssh_dir],
+      # This piggybacks onto the autorequire relationship $identity_file may
+      # have with $ssh_dir. This allows us to avoid references to $ssh_dir,
+      # which may not be managed by a catalog, yet still "do the right thing"
+      # in a catalog that enforces the existance of $ssh_dir.
+      require => File[$identity_file],
     }
   }
 
